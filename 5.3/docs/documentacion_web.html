@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación — Comparación de Optimización en Python</title>
+    <style>
+        :root {
+            --fondo: #1e1e2e;
+            --panel: #2a2a3d;
+            --borde: #3b3b55;
+            --texto: #cdd6f4;
+            --titulo: #cba6f7;
+            --acento1: #f38ba8;
+            --acento2: #a6e3a1;
+            --azul: #89b4fa;
+            --amarillo: #f9e2af;
+            --gris: #7f849c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Consolas', monospace;
+            background: var(--fondo);
+            color: var(--texto);
+            line-height: 1.7;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, #313244, #45475a);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--titulo);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--titulo);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--gris);
+            font-size: 0.95rem;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px 60px;
+        }
+
+        section {
+            background: var(--panel);
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            color: var(--titulo);
+            font-size: 1.35rem;
+            margin-bottom: 14px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        h3 {
+            color: var(--azul);
+            font-size: 1.1rem;
+            margin: 18px 0 8px;
+        }
+
+        p, li {
+            color: var(--texto);
+            font-size: 0.93rem;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 12px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            background: #181825;
+            color: var(--amarillo);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.88rem;
+        }
+
+        pre {
+            background: #181825;
+            color: #a6adc8;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 12px 0;
+            border: 1px solid var(--borde);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        .badge-rojo { background: var(--acento1); color: #1e1e2e; }
+        .badge-verde { background: var(--acento2); color: #1e1e2e; }
+        .badge-azul { background: var(--azul); color: #1e1e2e; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #313244;
+            color: var(--titulo);
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid var(--borde);
+        }
+
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        tr:hover { background: #313244; }
+
+        .tree {
+            font-family: 'Consolas', monospace;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--azul);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gris);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--borde);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🛰️ Comparación de Optimización y Documentación en Python</h1>
+    <p>Documentación del proyecto — Actividad de clase DAW</p>
+</header>
+
+<main>
+
+    <!-- OBJETIVO -->
+    <section>
+        <h2>🎯 Objetivo del Proyecto</h2>
+        <p>
+            Crear una aplicación en Python con interfaz gráfica (<code>Tkinter</code>) que compare
+            dos versiones del mismo problema: una versión <strong>no optimizada</strong> y una versión
+            <strong>optimizada</strong>.
+        </p>
+        <p>
+            La aplicación obtiene datos en tiempo real de la API pública
+            <a href="http://api.open-notify.org" style="color: var(--azul);">Open Notify</a>
+            (posición de la ISS y astronautas en el espacio) y los procesa de dos formas diferentes
+            para demostrar el impacto de la optimización en el rendimiento.
+        </p>
+    </section>
+
+    <!-- VERSIÓN NO OPTIMIZADA -->
+    <section>
+        <h2><span class="badge badge-rojo">⚠️ NO OPT</span> Versión No Optimizada</h2>
+        <p>
+            Esta versión realiza el procesamiento de datos de forma intencionadamente ineficiente
+            para ilustrar malas prácticas de programación:
+        </p>
+        <ul>
+            <li><strong>Bucles innecesarios:</strong> Se repiten cálculos dentro de bucles que solo iteran una vez o que recalculan el mismo valor múltiples veces.</li>
+            <li><strong>Búsqueda manual de duplicados:</strong> En lugar de usar <code>set()</code>, se recorren listas anidadas para encontrar elementos únicos.</li>
+            <li><strong>Conteo manual de caracteres:</strong> Se recorren cadenas carácter a carácter en lugar de usar <code>len()</code>.</li>
+            <li><strong>Cálculo manual de estadísticas:</strong> En lugar de usar <code>sum()</code>, <code>min()</code>, <code>max()</code>, se implementan bucles manuales.</li>
+            <li><strong>Concatenación de cadenas con <code>+</code>:</strong> Se construye el resumen concatenando cadenas una a una, lo cual es más lento.</li>
+        </ul>
+        <h3>Ejemplo de código no optimizado</h3>
+<pre>
+# Calcular suma manualmente
+suma_longitudes = 0
+for lon in longitudes:
+    suma_longitudes = suma_longitudes + lon
+
+# Buscar naves únicas con bucle anidado
+naves_unicas = []
+for astro in lista_astronautas:
+    nave = astro["nave"]
+    encontrada = False
+    for n in naves_unicas:
+        if n == nave:
+            encontrada = True
+    if not encontrada:
+        naves_unicas.append(nave)
+</pre>
+    </section>
+
+    <!-- VERSIÓN OPTIMIZADA -->
+    <section>
+        <h2><span class="badge badge-verde">✅ OPT</span> Versión Optimizada</h2>
+        <p>
+            Esta versión realiza exactamente el mismo trabajo, pero de forma eficiente:
+        </p>
+        <ul>
+            <li><strong>Operadores ternarios:</strong> Decisiones simples en una línea.</li>
+            <li><strong>List comprehensions:</strong> Extracción de datos en una sola expresión.</li>
+            <li><strong>Funciones integradas:</strong> Uso de <code>sum()</code>, <code>min()</code>, <code>max()</code>, <code>len()</code>, <code>set()</code>.</li>
+            <li><strong>f-strings:</strong> Construcción de cadenas eficiente y legible.</li>
+            <li><strong><code>math.hypot()</code>:</strong> Cálculo directo de la distancia.</li>
+        </ul>
+        <h3>Ejemplo de código optimizado</h3>
+<pre>
+# Naves únicas con set
+naves_unicas = list({a["nave"] for a in lista})
+
+# Estadísticas con funciones integradas
+longitudes = [len(n) for n in nombres]
+media = sum(longitudes) / len(longitudes) if longitudes else 0
+
+# Nombre más largo con max() y key
+nombre_mas_largo = max(nombres, key=len) if nombres else ""
+</pre>
+    </section>
+
+    <!-- COMPARACIÓN -->
+    <section>
+        <h2>📊 Comparación entre Versiones</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspecto</th>
+                    <th>No Optimizada</th>
+                    <th>Optimizada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Búsqueda de únicos</td>
+                    <td>Bucle anidado O(n²)</td>
+                    <td><code>set()</code> O(n)</td>
+                </tr>
+                <tr>
+                    <td>Estadísticas</td>
+                    <td>Bucles manuales (4 recorridos)</td>
+                    <td><code>sum()</code>, <code>min()</code>, <code>max()</code></td>
+                </tr>
+                <tr>
+                    <td>Longitud de cadena</td>
+                    <td>Recorrido carácter a carácter</td>
+                    <td><code>len()</code></td>
+                </tr>
+                <tr>
+                    <td>Distancia</td>
+                    <td><code>math.sqrt(x*x + y*y)</code> × 5</td>
+                    <td><code>math.hypot(x, y)</code> × 1</td>
+                </tr>
+                <tr>
+                    <td>Construcción de texto</td>
+                    <td>Concatenación con <code>+</code></td>
+                    <td>f-strings</td>
+                </tr>
+                <tr>
+                    <td>Legibilidad</td>
+                    <td>Más código, menos claro</td>
+                    <td>Menos código, más legible</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- cProfile -->
+    <section>
+        <h2><span class="badge badge-azul">📈 cProfile</span> Profiling con cProfile</h2>
+        <p>
+            Cada panel de la aplicación muestra en su parte inferior las estadísticas de rendimiento
+            generadas por el módulo <code>cProfile</code> de la biblioteca estándar de Python.
+        </p>
+        <h3>¿Qué es cProfile?</h3>
+        <p>
+            <code>cProfile</code> es un perfilador (profiler) determinístico incluido en Python.
+            Registra cada llamada a función realizada durante la ejecución, midiendo:
+        </p>
+        <ul>
+            <li><strong>ncalls:</strong> Número de veces que se llamó a la función.</li>
+            <li><strong>tottime:</strong> Tiempo total pasado dentro de la función (sin contar subfunciones).</li>
+            <li><strong>percall:</strong> Tiempo medio por llamada.</li>
+            <li><strong>cumtime:</strong> Tiempo acumulado incluyendo subfunciones.</li>
+        </ul>
+        <h3>¿Cómo se usa en este proyecto?</h3>
+<pre>
+profiler = cProfile.Profile()
+profiler.enable()
+resultado = funcion(*args)
+profiler.disable()
+
+stats = pstats.Stats(profiler)
+stats.sort_stats("cumulative")
+stats.print_stats(10)
+</pre>
+        <p>
+            Esto permite ver en tiempo real qué funciones consumen más recursos y comparar
+            directamente ambas versiones.
+        </p>
+    </section>
+
+    <!-- HELP Y DOCSTRINGS -->
+    <section>
+        <h2>❓ Botón Help y Docstrings</h2>
+        <p>
+            Cada panel de la aplicación incluye un botón <strong>Help</strong> que, al pulsarse,
+            abre una ventana emergente con la documentación de todas las funciones del módulo
+            <code>utils.py</code>.
+        </p>
+        <h3>¿Qué son los docstrings?</h3>
+        <p>
+            Los docstrings son cadenas de documentación que se colocan justo debajo de la
+            definición de una función, clase o módulo en Python. Sirven para describir:
+        </p>
+        <ul>
+            <li>Qué hace la función.</li>
+            <li>Qué parámetros acepta.</li>
+            <li>Qué valor retorna.</li>
+        </ul>
+<pre>
+def obtener_posicion_iss():
+    """
+    Obtiene la posición actual de la Estación Espacial Internacional.
+
+    Parámetros:
+        Ninguno.
+
+    Retorna:
+        dict: Diccionario con latitud, longitud, timestamp, exito, error.
+    """
+</pre>
+        <p>
+            La ventana Help usa el módulo <code>inspect</code> para leer estos docstrings en
+            tiempo de ejecución y mostrarlos formateados.
+        </p>
+    </section>
+
+    <!-- EJECUCIÓN -->
+    <section>
+        <h2>🚀 Instrucciones de Ejecución</h2>
+        <h3>1. Instalar dependencias</h3>
+<pre>pip install -r requirements.txt</pre>
+        <h3>2. Ejecutar la aplicación</h3>
+<pre>python main.py</pre>
+        <h3>3. Generar PDF de documentación</h3>
+<pre>python docs/generar_pdf.py</pre>
+        <p>
+            <strong>Nota:</strong> Se requiere conexión a Internet para que la API funcione.
+            La aplicación maneja errores de conexión mostrando un mensaje en los paneles.
+        </p>
+    </section>
+
+    <!-- ESTRUCTURA -->
+    <section>
+        <h2>📁 Estructura de Archivos</h2>
+        <div class="tree">
+            5.3/<br>
+            ├── main.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Aplicación principal (Tkinter)<br>
+            ├── utils.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Funciones de API y procesamiento<br>
+            ├── requirements.txt &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Dependencias del proyecto<br>
+            ├── README.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Explicación general del proyecto<br>
+            └── docs/<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── documentacion_web.html &nbsp; # Esta documentación<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── generar_pdf.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Script para generar el PDF<br>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    Proyecto de DAW — Comparación de Optimización en Python — Abril 2026
+</footer>
+
+</body>
+</html>
